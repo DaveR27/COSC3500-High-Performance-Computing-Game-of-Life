@@ -9,6 +9,7 @@ int main() {
     int height = 5;
     Grid grid(width, height);
 
+    
 
     for (int i=0; i < width; i++) {
         for (int j=0; j < height; j++) {

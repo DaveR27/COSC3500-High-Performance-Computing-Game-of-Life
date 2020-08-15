@@ -1,20 +1,20 @@
-#include <vector>
 #include <iostream>
 #include <math.h>
+#include "Vect2D.cpp"
 
 using namespace std;
 
 class Grid {
     public:
         int width, height;
-        vector<vector<int>> grid;
+        Vect2D grid;
         vector<vector<int>> neighborhood;
         int deadValue = 0;
         int aliveValue = 1;
         Grid(int width, int height) {
-            width = width;
-            height = height;
-            grid = vector<vector<int>>(width, vector<int>(height, 0));
+            width = width; // x-axis
+            height = height; //y-axis
+            grid = Vect2D(width, height);
             createNeighborhood();
         }
         void createNeighborhood();
@@ -55,7 +55,7 @@ int convertFtoI(float x) {
     if (x >= 0) {
         return (int) (x + 0.5);
     } else {
-        return (int) (x - 0.5)
+        return (int) (x - 0.5);
     }
 }
 
@@ -91,6 +91,5 @@ void Grid::evolve() {
 vector<vector<int>> Grid::convolve(vector<vector<int>> grid, 
     vector<vector<int>> neighborhood) {
         
-
 }
 
