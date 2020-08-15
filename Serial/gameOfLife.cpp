@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <math.h>
 
 using namespace std;
 
@@ -8,6 +9,8 @@ class Grid {
         int width, height;
         vector<vector<int>> grid;
         vector<vector<int>> neighborhood;
+        int deadValue = 0;
+        int aliveValue = 1;
         Grid(int width, int height) {
             width = width;
             height = height;
@@ -15,9 +18,15 @@ class Grid {
             createNeighborhood();
         }
         void createNeighborhood();
-        void aliveNeighbors();
-        void getNeighbors();
+        vector<vector<int>> getStates();
+        vector<vector<int>> getGrid();
+        vector<vector<int>> getNeighbors();
+        vector<vector<int>> aliveNeighbors();
         void evolve();
+        vector<vector<int>> convolve(vector<vector<int>>,
+            vector<vector<int>>);
+        private:
+            int convertFtoI(float);
 };
 
 void Grid::createNeighborhood() {
@@ -26,10 +35,29 @@ void Grid::createNeighborhood() {
     neighborhood[1][1] = 0;
 }
 
-void Grid::getNeighbors() {
-    
+vector<vector<int>> Grid::getStates() {
+    return grid;
 }
 
+vector<vector<int>> Grid::getGrid() {
+    return getStates();
+}
+
+vector<vector<int>> Grid::getNeighbors() {
+    return convolve(grid, neighborhood);
+}
+
+vector<vector<int>> Grid::aliveNeighbors() {
+    return getNeighbors();
+}
+
+int convertFtoI(float x) {
+    if (x >= 0) {
+        return (int) (x + 0.5);
+    } else {
+        return (int) (x - 0.5)
+    }
+}
 
 
 /*
@@ -40,7 +68,29 @@ Given the state of a cell the GoL rules apply:
 - Any dead cell with exactly 3 live neighbors becomes living = reproduction
 */
 void Grid::evolve() {
+    vector<vector<int>> neighbors = aliveNeighbors();
+    
+    for (int i=0; i<width; i++) {
+            for (int j=0; j<height; j++) {
+                int element = convertFtoI(round(neighbors[i][j]));
 
+                if (element < 2) {
+                    grid[i][j] = deadValue;
+                }
+                if (element > 3) {
+                    grid[i][j] = deadValue;
+                }
+                if (element == 3) {
+                    grid[i][j] = aliveValue;
+                }
+            }
+        }
 }
 
+//convolve output will have the same size matrix as the biggest one given, ie the grid.
+vector<vector<int>> Grid::convolve(vector<vector<int>> grid, 
+    vector<vector<int>> neighborhood) {
+        
+
+}
 
