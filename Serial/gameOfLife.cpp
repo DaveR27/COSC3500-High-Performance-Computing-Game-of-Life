@@ -8,7 +8,7 @@ class Grid {
     public:
         int width, height;
         Vect2D grid;
-        vector<vector<int>> neighborhood;
+        Vect2D neighborhood;
         int deadValue = 0;
         int aliveValue = 1;
         Grid(int width, int height) {
@@ -18,46 +18,31 @@ class Grid {
             createNeighborhood();
         }
         void createNeighborhood();
-        vector<vector<int>> getStates();
-        vector<vector<int>> getGrid();
-        vector<vector<int>> getNeighbors();
-        vector<vector<int>> aliveNeighbors();
+        Vect2D getGrid();
+        Vect2D getNeighbors();
+        Vect2D aliveNeighbors();
         void evolve();
-        vector<vector<int>> convolve(vector<vector<int>>,
-            vector<vector<int>>);
-        private:
-            int convertFtoI(float);
+        Vect2D convolve(Vect2D, Vect2D);
 };
 
 void Grid::createNeighborhood() {
-    neighborhood = vector<vector<int>>(3,
-        vector<int>(3,1));
-    neighborhood[1][1] = 0;
+    neighborhood = Vect2D(3,3);
+    neighborhood.insert(1,1,deadValue);
 }
 
-vector<vector<int>> Grid::getStates() {
+
+Vect2D Grid::getGrid() {
     return grid;
 }
 
-vector<vector<int>> Grid::getGrid() {
-    return getStates();
-}
-
-vector<vector<int>> Grid::getNeighbors() {
+Vect2D Grid::getNeighbors() {
     return convolve(grid, neighborhood);
 }
 
-vector<vector<int>> Grid::aliveNeighbors() {
+Vect2D Grid::aliveNeighbors() {
     return getNeighbors();
 }
 
-int convertFtoI(float x) {
-    if (x >= 0) {
-        return (int) (x + 0.5);
-    } else {
-        return (int) (x - 0.5);
-    }
-}
 
 
 /*
@@ -68,28 +53,45 @@ Given the state of a cell the GoL rules apply:
 - Any dead cell with exactly 3 live neighbors becomes living = reproduction
 */
 void Grid::evolve() {
-    vector<vector<int>> neighbors = aliveNeighbors();
+    Vect2D neighbors = aliveNeighbors();
     
     for (int i=0; i<width; i++) {
             for (int j=0; j<height; j++) {
-                int element = convertFtoI(round(neighbors[i][j]));
+                int element = int(neighbors.index(i,j));
 
                 if (element < 2) {
-                    grid[i][j] = deadValue;
+                    grid.insert(i,j,deadValue);
                 }
                 if (element > 3) {
-                    grid[i][j] = deadValue;
+                    grid.insert(i,j,deadValue);
                 }
                 if (element == 3) {
-                    grid[i][j] = aliveValue;
+                    grid.insert(i,j,aliveValue);
                 }
             }
         }
 }
 
-//convolve output will have the same size matrix as the biggest one given, ie the grid.
-vector<vector<int>> Grid::convolve(vector<vector<int>> grid, 
-    vector<vector<int>> neighborhood) {
+// //convolve output will have the same size matrix as the biggest one given, ie the grid.
+// Vect2D Grid::convolve(Vect2D grid, 
+//     Vect2D neighborhood) {
         
+// }
+
+Vect2D Grid::convolve(Vect2D grid, Vect2D neighborhood)
+{
+    double sum;
+    for(int y = 1; y < grid.getWidth() - 1; y++){
+        for(int x = 1; x < grid.getHeight() - 1; x++){
+            sum = 0;
+            for(int k = -1; k <= 1;k++){
+                for(int j = -1; j <=1; j++){
+                    sum = sum + neighborhood.index(j+1, k+1)*grid.index(y - j, x - k);
+                }
+            }
+            grid.insert(y, x, sum);
+        }
+    }
+    return grid;
 }
 

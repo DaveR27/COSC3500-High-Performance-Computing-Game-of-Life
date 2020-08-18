@@ -13,7 +13,7 @@ int main() {
 
     for (int i=0; i < width; i++) {
         for (int j=0; j < height; j++) {
-            cout << grid.grid[i][j] << " ";
+            cout << grid.grid.index(i, j) << " ";
         }
         cout << endl;
     }
