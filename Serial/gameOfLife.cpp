@@ -1,6 +1,7 @@
 #include <iostream>
 #include <math.h>
 #include "Vect2D.cpp"
+#include <vector>
 
 using namespace std;
 
@@ -11,87 +12,154 @@ class Grid {
         Vect2D neighborhood;
         int deadValue = 0;
         int aliveValue = 1;
-        Grid(int width, int height) {
-            width = width; // x-axis
-            height = height; //y-axis
-            grid = Vect2D(width, height);
+        Grid(int x, int y) {
+            width = x; // x-axis
+            height = y; //y-axis
+            // cout<<width<<endl;
+            // cout<<height<<endl;
+            grid = Vect2D(x, y);
+            // cout<<grid.colSize<<endl;
+            // cout<<grid.rowSize<<endl;
             createNeighborhood();
         }
-        void createNeighborhood();
-        Vect2D getGrid();
-        Vect2D getNeighbors();
-        Vect2D aliveNeighbors();
-        void evolve();
-        Vect2D convolve(Vect2D, Vect2D);
-};
 
-void Grid::createNeighborhood() {
-    neighborhood = Vect2D(3,3);
-    neighborhood.insert(1,1,deadValue);
-}
+    void createNeighborhood() {
+        neighborhood = Vect2D(3,3);
+        neighborhood.insert(1,1,deadValue);
+    }
 
+    Vect2D getGrid() {
+        return grid;
+    }
 
-Vect2D Grid::getGrid() {
-    return grid;
-}
+    int aliveNeighbors(int i, int j) {
+        int topL = 0; // neighbors[0]
+        int topM = 0; // neighbors[1]
+        int topR = 0; // neighbors[2]
+        int middleL = 0; // neighbors[3]
+        int middleR = 0; // neighbors[4]
+        int bottomL = 0; // neighbors[5]
+        int bottomM = 0; // neighbors[6]
+        int bottomR = 0; // neighbors[7]
 
-Vect2D Grid::getNeighbors() {
-    return convolve(grid, neighborhood);
-}
+        int neighbors[8] = {topL, topM, topR, middleL, middleR, bottomL, bottomM, bottomR};
+        int neighborsSize = 8;
+        int aliveCells = 0;
 
-Vect2D Grid::aliveNeighbors() {
-    return getNeighbors();
-}
+        //Handling Boundries
+        if (i != 0) {
+            neighbors[0] = grid.index(i-1, j-1);
+            neighbors[1] = grid.index(i-1, j);
+            neighbors[2] = grid.index(i-1, j+1);
+        } 
 
+        if (j != 0) {
+            neighbors[0] = grid.index(i-1, j-1);
+            neighbors[3] = grid.index(i, j-1);
+            neighbors[5] = grid.index(i+1, j-1);
+        }
 
+        if (i != height) {
+            neighbors[5] = grid.index(i+1, j-1);
+            neighbors[6] = grid.index(i+1, j);
+            neighbors[7] = grid.index(i+1, j+1);
+        }
 
-/*
-Given the state of a cell the GoL rules apply:
-- Any live call with fewer than 2 neighbors dies = underpopulation
-- Any live cell with two or three live neighbors lives on to the next gen
-- Any live cell with more than 3 live neighbors dies = overpopulation
-- Any dead cell with exactly 3 live neighbors becomes living = reproduction
-*/
-void Grid::evolve() {
-    Vect2D neighbors = aliveNeighbors();
-    
-    for (int i=0; i<width; i++) {
-            for (int j=0; j<height; j++) {
-                int element = int(neighbors.index(i,j));
+        if (j != width) {
+            neighbors[2] = grid.index(i-1, j+1);
+            neighbors[4] = grid.index(i, j+1);
+            neighbors[7] = grid.index(i+1, j+1);
+        }
 
-                if (element < 2) {
-                    grid.insert(i,j,deadValue);
-                }
-                if (element > 3) {
-                    grid.insert(i,j,deadValue);
-                }
-                if (element == 3) {
-                    grid.insert(i,j,aliveValue);
-                }
+        for (int x=0; x<neighborsSize; x++) {
+            if (neighbors[x] == 1) {
+                aliveCells++;
             }
         }
-}
+        return aliveCells;
+    }
 
-// //convolve output will have the same size matrix as the biggest one given, ie the grid.
-// Vect2D Grid::convolve(Vect2D grid, 
-//     Vect2D neighborhood) {
-        
-// }
-
-Vect2D Grid::convolve(Vect2D grid, Vect2D neighborhood)
-{
-    double sum;
-    for(int y = 1; y < grid.getWidth() - 1; y++){
-        for(int x = 1; x < grid.getHeight() - 1; x++){
-            sum = 0;
-            for(int k = -1; k <= 1;k++){
-                for(int j = -1; j <=1; j++){
-                    sum = sum + neighborhood.index(j+1, k+1)*grid.index(y - j, x - k);
-                }
-            }
-            grid.insert(y, x, sum);
+    void updateGrid(vector<pair<int,int>> vect, int deadOrAlive) {
+        for (uint i = 0; i < vect.size(); i ++) {
+            grid.insert(vect[i].first, vect[i].second, deadOrAlive);
         }
     }
-    return grid;
-}
+
+    /*
+    Given the state of a cell the GoL rules apply:
+    - Any live call with fewer than 2 neighbors dies = underpopulation
+    - Any live cell with two or three live neighbors lives on to the next gen
+    - Any live cell with more than 3 live neighbors dies = overpopulation
+    - Any dead cell with exactly 3 live neighbors becomes living = reproduction
+    */
+    void evolve() {
+        vector<pair<int,int>> killPos;
+        vector<pair<int,int>> alivePos;
+
+        for (int a=0; a<width; a++){
+            for(int b=0; b<height; b++) {
+                int aliveCells = aliveNeighbors(a, b);
+
+                if (aliveCells < 2) {
+                    killPos.push_back(make_pair(a, b));
+                }
+                if (aliveCells > 3) {
+                    killPos.push_back(make_pair(a, b));
+                }
+                if (aliveCells == 3) {
+                    alivePos.push_back(make_pair(a, b));
+                }
+            }
+        }
+
+        // for (int i=0; i<width; i++) {
+        //     for (int j=0; j<height; j++) {
+        //         int aliveCells = aliveNeighbors(i,j);
+        //         cout<<"IN EVOLVE"<<endl;
+        //         if (aliveCells < 2) {
+        //             killPos.push_back(make_pair(i,j));
+        //         }
+        //         if (aliveCells > 3) {
+        //             killPos.push_back(make_pair(i,j));
+        //         }
+        //         if (aliveCells == 3) {
+        //             alivePos.push_back(make_pair(i,j));
+        //         }
+        //     }
+        // }   
+
+        
+        updateGrid(killPos, deadValue);
+        updateGrid(alivePos, aliveValue);
+
+        // for(int k=0; k < 50; k ++) {
+        //     for (int z=0; z < 50; z++){
+        //         cout<<grid.index(k,z);
+        //     }
+        //     cout<<endl;
+        // }
+        // cout << '\n';  
+        
+    }
+
+
+
+    void GoL(int moves) {
+        int i = 0;
+        while (i < moves) {
+            evolve();
+            i++;
+        }
+    }
+
+    void insertGlider() {
+        grid.insert(0,1, aliveValue);
+        grid.insert(1,2, aliveValue);
+        grid.insert(2,0, aliveValue);
+        grid.insert(2,1, aliveValue);
+        grid.insert(2,2, aliveValue);
+    }
+
+};
+
 
