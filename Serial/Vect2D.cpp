@@ -14,8 +14,8 @@ class Vect2D {
             array = std::vector<int>(size, 0);
         }
         Vect2D() {
-            rowSize = 250;
-            colSize = 250;
+            rowSize = 256;
+            colSize = 256;
             size = rowSize*colSize;
             array = std::vector<int>(size, 0);
         }

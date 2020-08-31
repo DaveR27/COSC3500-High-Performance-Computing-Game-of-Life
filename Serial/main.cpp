@@ -2,65 +2,49 @@
 #include "gameOfLife.cpp"
 #include<fstream>
 
-int main() {
+int main(int argc, char const *argv[]) {
+    int moves;
+    int width;
+    int height;
+    int loop = 1;
     ofstream file;
     file.open("game_of_life_save.txt");
-    int width = 50;
-    int height = 50;
+
+    if (argc == 5) {
+        //argv[1] is the file you want to insert
+        width = atoi(argv[2]); //argv[2]
+        height = atoi(argv[3]); //argv[3]
+        moves = atoi(argv[4]); //argv[4]
+        
+    } else {
+        //argv[1] is the file you want to insert
+        width = 256; //argv[2]
+        height = 256; //argv[3]
+        moves = 50; //argv[4]
+        
+    }
+
+    //Grid that life is simulated on
     Grid grid(width, height);
-    int loop = 0;
-    int moves = 4;
+    switch (argc) {
+        case 5:
+            grid.insertPatternFromFile(argv[1]);
+            break;
+        
+        default:
+            grid.insertGlider();
+            break;
+    }
     
-    grid.insertGlider();
-
-    // for (int i=0; i < width; i++) {
-    //         for (int j=0; j < height; j++) {
-    //             cout <<grid.grid.index(i, j);
-    //         }
-    //         cout << endl;
-    // }
-    
-    // cout << endl;
-    // cout<<grid.grid.index(0,1)<<endl;
-    // cout<<grid.grid.index(1,2)<<endl;
-    // cout<<grid.grid.index(2,0)<<endl;
-    // cout<<grid.grid.index(2,1)<<endl;
-    // cout<<grid.grid.index(2,2)<<endl;
-
-    // grid.grid.insert(0,1,0);
-    // grid.grid.insert(1,2, 0);
-    // grid.grid.insert(2,0, 0);
-    // grid.grid.insert(2,1, 0);
-    // grid.grid.insert(2,2, 0);
-
-    // cout<<grid.grid.index(0,1)<<endl;
-    // cout<<grid.grid.index(1,2)<<endl;
-    // cout<<grid.grid.index(2,0)<<endl;
-    // cout<<grid.grid.index(2,1)<<endl;
-    // cout<<grid.grid.index(2,2)<<endl;
-
-
-
-    //grid.GoL(moves);
-
-    // for (int i=0; i < width; i++) {
-    //         for (int j=0; j < height; j++) {
-    //             cout <<grid.grid.index(i, j);
-    //         }
-    //         cout << endl;
-    // }
-    
-    // cout << endl;
-
-
-
-    
+    //Loop to write out to file from c
     while (loop <= moves) {
 
         for (int i=0; i < width; i++) {
             for (int j=0; j < height; j++) {
+                
                 file << grid.grid.index(i, j);
             }
+            
             file << endl;
         }
         file << endl;

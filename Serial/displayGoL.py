@@ -1,50 +1,94 @@
 import matplotlib.pyplot as plt 
 import matplotlib.animation as animation
 import numpy as np
+import sys
+import os
 
-moves = 200
+#Start up C++ GoL
+#---------------------------------
+argv = sys.argv
+argc = len(argv)
+#Needed
+#----------------------------
+#argv[1]: Vis of NoVis | indicates if the GoL is needed to be Visual or not
+#
+#Optional
+#----------------------------
+#argv[2]: Path to pattern txt file
+#argv[3]: Height of Grid
+#argv[4]: Width of Grid
+#argv[5]: Amount of moves for the simulation
+
+#Vis or NoVis
+Vis =  False
+default = True
+
+if argv[1] == "Vis":
+    Vis = True
+elif argv[1] == "NoVis":
+    Vis = False
+else:
+    print("Pick option Vis or NoVis")
+    exit
+
+if argc == 6:
+    path = argv[2]
+    gridHeight = argv[3]
+    gridWidth = argv[4]
+    gridEvolves = argv[5]
+    default = False
+
+
+if default:
+    os.system("./main")
+else:
+    os.system(
+        "./main " + path + ' ' + gridWidth + ' ' 
+        + gridHeight + ' ' + gridEvolves
+    )
+    
+if (Vis == False):
+    exit
+
+
+
+
+#Visual start up
+#---------------------------------------------------
+
+moves = 50
 N = 256
-storyIndex = 0
+lifeIndex = 0
 
 
-story  = np.empty(moves, np.object)
 
-while (storyIndex<moves):
-    story[storyIndex] = np.zeros((N,N), np.uint)
-    storyIndex = storyIndex + 1
+life  = np.empty(moves, np.ndarray)
 
-storyIndex = 0
+while (lifeIndex<moves):
+    life[lifeIndex] = np.zeros((N,N), np.uint)
+    lifeIndex = lifeIndex + 1
+
+lifeIndex = 0
 
 path = "game_of_life_save.txt"
 
 with open(path, 'r') as file:
-    for line in file.readline():
-        print(line)
-        print("Len: %d", len(line))
-        # if (line == '\n'):
-        #     break
-        # else:
-        #     i = 0
-        #     j = 0
-        #     while (i < N):
-        #         while (j < N):
-        #             story[storyIndex][i, j] = line[j]
-        #             j = j + 1
-        #         j = 0
-        #         i = i + 1
-    #         if line == '\n':
-    #             storyIndex = storyIndex + 1
-    #         else:
-    #             i = 0
-    #             j = 0
-    #             while i < N:
-    #                 while j < N:
-    #                     story[storyIndex][i,j] = line[j]
-    #                     j = j + 1
-    #                 j = 0
-    #                 i = i + 1
 
-storyIndex = 0
+    while (lifeIndex < moves):
+        k = 0
+        while (k <= N):
+            line = file.readline()
+            if line == '\n':
+                lifeIndex = lifeIndex + 1
+                break
+            else:
+                line = line[:-1]
+                for index, element in enumerate(line):
+                    life[lifeIndex][k][index] = int(element)
+            k = k + 1
+
+
+lifeIndex = 0
 
 
 
@@ -52,29 +96,38 @@ storyIndex = 0
 
 #Animation
 #-----------------------------------------------
+
 fig = plt.figure()
 plt.pink()
 
-cells = story[storyIndex]
-print(cells)
+cells = life[lifeIndex]
+
 
 img = plt.imshow(cells, animated=True)
 
 
-def getNextPhase(storyIndex):
-    storyIndex = storyIndex + 1
-    return story[storyIndex]
 
 def animate(i):
-    nextGen = getNextPhase(storyIndex)
-    img.set_array(nextGen)
+    global life
+    global lifeIndex
+
+    lifeIndex = lifeIndex + 1
+
+    if lifeIndex == moves:
+        lifeIndex = 0
+
+    updatedCells = life[lifeIndex]
+
+    img.set_array(updatedCells)
+
     return img
+
 
 
 
 interval = 200 #ms
 
-# #animate 24 fames with an interval between them calling animate function at each frame
-ani = animation.FuncAnimation(fig, animate, frames=24, interval=interval, blit=True)
+# # #animate 24 fames with an interval between them calling animate function at each frame
+ani = animation.FuncAnimation(fig, animate, frames=24, interval=interval)
 
 plt.show()
