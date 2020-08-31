@@ -55,9 +55,13 @@ if (Vis == False):
 
 #Visual start up
 #---------------------------------------------------
+if (argc == 6):
+    moves = int(gridEvolves)
+    N = int(gridWidth)
+else:
+    moves = 50
+    N = 256
 
-moves = 50
-N = 256
 lifeIndex = 0
 
 
