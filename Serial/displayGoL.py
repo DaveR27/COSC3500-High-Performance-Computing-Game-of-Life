@@ -17,19 +17,20 @@ argc = len(argv)
 #argv[2]: Path to pattern txt file
 #argv[3]: Height of Grid
 #argv[4]: Width of Grid
-#argv[5]: Amount of moves for the simulation
+#argv[5]: Amount of generations for the simulation
 
 #Vis or NoVis
 Vis =  False
 default = True
 
+
+if argc <= 1:
+    print("Pick option Vis or NoVis")
+    exit()
+
 if argv[1] == "Vis":
     Vis = True
-elif argv[1] == "NoVis":
-    Vis = False
-else:
-    print("Pick option Vis or NoVis")
-    exit
+
 
 if argc == 6:
     path = argv[2]
@@ -40,35 +41,33 @@ if argc == 6:
 
 
 if default:
-    os.system("./main")
+    os.system("./main") #need to fix
 else:
     os.system(
         "./main " + path + ' ' + gridWidth + ' ' 
-        + gridHeight + ' ' + gridEvolves
+        + gridHeight + ' ' + gridEvolves + ' ' + argv[1]
     )
     
 if (Vis == False):
-    exit
-
-
+    exit()
 
 
 #Visual start up
 #---------------------------------------------------
 if (argc == 6):
-    moves = int(gridEvolves)
+    generations = int(gridEvolves)
     N = int(gridWidth)
 else:
-    moves = 50
+    generations = 50
     N = 256
 
 lifeIndex = 0
 
 
 
-life  = np.empty(moves, np.ndarray)
+life  = np.empty(generations, np.ndarray)
 
-while (lifeIndex<moves):
+while (lifeIndex<generations):
     life[lifeIndex] = np.zeros((N,N), np.uint)
     lifeIndex = lifeIndex + 1
 
@@ -78,7 +77,7 @@ path = "game_of_life_save.txt"
 
 with open(path, 'r') as file:
 
-    while (lifeIndex < moves):
+    while (lifeIndex < generations):
         k = 0
         while (k <= N):
             line = file.readline()
@@ -117,7 +116,7 @@ def animate(i):
 
     lifeIndex = lifeIndex + 1
 
-    if lifeIndex == moves:
+    if lifeIndex == generations:
         lifeIndex = 0
 
     updatedCells = life[lifeIndex]

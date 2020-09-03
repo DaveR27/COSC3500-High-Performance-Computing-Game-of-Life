@@ -167,14 +167,22 @@ class Grid {
         grid.insert(2,2, aliveValue);
     }
 
+    //Takes a txt file and inserts the pattern into the middle fo the grid
     void insertPatternFromFile(string fileName) {
         ifstream file(fileName);
         string line;
+        int centering = 0;
+        bool centered = false;
         int i = 0;
         while(getline(file, line)) {
+            if(centered == false){
+                centering += line.size();
+                cout <<centering<<endl;
+                centered = true;
+            }
             for (uint j=0; j<line.length(); j++) {
                 if (line[j] == 'O') {
-                    grid.insert(i, j, aliveValue);
+                    grid.insert((i+(width/2)) - (centering/2), (j+(height/2)) - (centering/2), aliveValue);
                 }
             }
             i++;

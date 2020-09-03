@@ -1,47 +1,20 @@
 
 #include "gameOfLife.cpp"
-#include<fstream>
+#include <fstream>
+#include <string>
 
-int main(int argc, char const *argv[]) {
-    int moves;
-    int width;
-    int height;
-    int loop = 1;
+
+void VisLoop(int loop, int generations, 
+            int width, int height, Grid grid){
     ofstream file;
     file.open("game_of_life_save.txt");
 
-    if (argc == 5) {
-        //argv[1] is the file you want to insert
-        width = atoi(argv[2]); //argv[2]
-        height = atoi(argv[3]); //argv[3]
-        moves = atoi(argv[4]); //argv[4]
-        
-    } else {
-        //argv[1] is the file you want to insert
-        width = 256; //argv[2]
-        height = 256; //argv[3]
-        moves = 50; //argv[4]
-        
-    }
 
-    //Grid that life is simulated on
-    Grid grid(width, height);
-    switch (argc) {
-        case 5:
-            grid.insertPatternFromFile(argv[1]);
-            break;
-        
-        default:
-            grid.insertGlider();
-            break;
-    }
-    
     //Loop to write out to file from c
-    while (loop <= moves) {
+    while (loop <= generations) {
 
         for (int i=0; i < width; i++) {
             for (int j=0; j < height; j++) {
-                
                 file << grid.grid.index(i, j);
             }
             
@@ -51,6 +24,58 @@ int main(int argc, char const *argv[]) {
 
         grid.evolve();
         loop++;
+    
     }   
     file.close();
+
+}
+
+void gameLoop(int loop, int generations, Grid grid) {
+            
+    while (loop <= generations) {
+        grid.evolve();
+        loop++; 
+    }   
+
+}
+
+int main(int argc, char const *argv[]) {
+    int generations;
+    int width;
+    int height;
+    int loop = 1;
+    string visOut = "NoVis";
+
+    if (argc == 6) {
+        //argv[1] is the file you want to insert
+        width = atoi(argv[2]); //argv[2]
+        height = atoi(argv[3]); //argv[3]
+        generations = atoi(argv[4]); //argv[4]
+        visOut = argv[5];
+    } else {
+        //argv[1] is the file you want to insert
+        width = 256; //argv[2]
+        height = 256; //argv[3]
+        generations = 50; //argv[4]
+        
+    }
+
+    //Grid that life is simulated on
+    Grid grid(width, height);
+    switch (argc) {
+        case 6:
+            grid.insertPatternFromFile(argv[1]);
+            break;
+        
+        default:
+            grid.insertGlider();
+            break;
+    }
+    
+    const string visStatus = "NoVis";
+    if (visStatus.compare(visOut)) {
+        VisLoop(loop, generations, width, height, grid);
+    } else {
+        gameLoop(loop, generations, grid);
+    }
 }
