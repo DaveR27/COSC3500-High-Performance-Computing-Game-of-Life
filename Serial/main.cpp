@@ -2,14 +2,14 @@
 #include "gameOfLife.cpp"
 #include <fstream>
 #include <string>
+#include <time.h>
+using namespace std;
 
 
 void VisLoop(int loop, int generations, 
             int width, int height, Grid grid){
     ofstream file;
     file.open("game_of_life_save.txt");
-
-
     //Loop to write out to file from c
     while (loop <= generations) {
 
@@ -30,16 +30,11 @@ void VisLoop(int loop, int generations,
 
 }
 
-void gameLoop(int loop, int generations, Grid grid) {
-            
-    while (loop <= generations) {
-        grid.evolve();
-        loop++; 
-    }   
-
-}
 
 int main(int argc, char const *argv[]) {
+    // clock_t t1, t2;
+    // t1 = clock(); //starts timer for experiments
+
     int generations;
     int width;
     int height;
@@ -73,9 +68,21 @@ int main(int argc, char const *argv[]) {
     }
     
     const string visStatus = "NoVis";
+    //bool vis = false;
     if (visStatus.compare(visOut)) {
         VisLoop(loop, generations, width, height, grid);
+        //vis = true;
     } else {
-        gameLoop(loop, generations, grid);
+        grid.playGOL(loop, generations);
     }
+
+    //End of experiments
+    // t2 = clock();
+    // float tickDiff ((float)t2-(float)t1);
+    // float sec = tickDiff/CLOCKS_PER_SEC;
+    // cout<<sec<<endl;
+    // if (vis == false) {
+    //     grid.outputGrid();
+    // }
+    return 0;
 }

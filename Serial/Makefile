@@ -1,25 +1,56 @@
 #Variables
+OPTIONE = -O1
+OPTITWO = -O2
+OPTITHREE = -O3
 CFLAGS = -Wall -pedantic -std=c++11
 TARGETS = Vect2D.o gameOfLife.o main
-VIS = visualisation.o
-PYTHONVIS = -I/usr/include/python2.7 -lpython
+
 .DEFAULT: all
 
-pyth: $(TARGETS) $(VIS)
+levelOne: Vect2D.o1 gameOfLife.o1 main1
+
+levelTwo: Vect2D.o2 gameOfLife.o2 main2
+
+levelThree: Vect2D.o3 gameOfLife.o3 main3
 
 all: $(TARGETS)
 
 #Compiling files
+#No Opti
 Vect2D.o: Vect2D.cpp
 	g++ $(CFLAGS) -c Vect2D.cpp -o Vect2D.o
 gameOfLife.o: gameOfLife.cpp
 	g++ $(CFLAGS) -c gameOfLife.cpp -o gameOfLife.o
-visualisation.o: visualisation.cpp matplotlibcpp.h
-	g++ $(CFLAGS) -c visualisation.cpp -o visualisation.o $(PYTHONVIS)
-
 
 main: main.cpp Vect2D.o  gameOfLife.o
 	g++ $(CFLAGS) Vect2D.o  gameOfLife.o main.cpp -o main
+
+#Opt1
+Vect2D.o1: Vect2D.cpp
+	g++ $(CFLAGS) $(OPTIONE) -c Vect2D.cpp -o Vect2D.o1
+gameOfLife.o1: gameOfLife.cpp
+	g++ $(CFLAGS) $(OPTIONE) -c gameOfLife.cpp -o gameOfLife.o1
+
+main1: main.cpp Vect2D.o1  gameOfLife.o1
+	g++ $(CFLAGS) $(OPTIONE) Vect2D.o1  gameOfLife.o1 main.cpp -o main
+
+#Opti2
+Vect2D.o2: Vect2D.cpp
+	g++ $(CFLAGS) $(OPTITWO) -c Vect2D.cpp -o Vect2D.o2
+gameOfLife.o2: gameOfLife.cpp
+	g++ $(CFLAGS) $(OPTITWO) -c gameOfLife.cpp -o gameOfLife.o2
+
+main2: main.cpp Vect2D.o2  gameOfLife.o2
+	g++ $(CFLAGS) $(OPTITWO) Vect2D.o2  gameOfLife.o2 main.cpp -o main
+
+#Opti3
+Vect2D.o3: Vect2D.cpp
+	g++ $(CFLAGS) $(OPTITHREE) -c Vect2D.cpp -o Vect2D.o3
+gameOfLife.o3: gameOfLife.cpp
+	g++ $(CFLAGS) $(OPTITHREE) -c gameOfLife.cpp -o gameOfLife.o3
+
+main3: main.cpp Vect2D.o3  gameOfLife.o3
+	g++ $(CFLAGS) $(OPTITHREE) Vect2D.o3  gameOfLife.o3 main.cpp -o main
 
 #Clean directory
 clean:

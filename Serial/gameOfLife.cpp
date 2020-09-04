@@ -38,9 +38,6 @@ class Grid {
         int aliveCells = 0;
 
         //Handling Boundries
-
-
-
         if ((i == 0) ||  (j == 0) || (i == height) || (j == width)) {
 
 
@@ -158,6 +155,29 @@ class Grid {
         
     }
 
+    void playGOL(int loop, int generations){
+        while (loop <= generations) {
+            evolve();
+            loop++; 
+        }
+    }
+
+    void outputGrid(){
+        ofstream file;
+        file.open("game_of_life_save.txt");
+
+        for (int i=0; i < width; i++) {
+            for (int j=0; j < height; j++) {
+                file << grid.index(i, j);
+            }
+            
+            file << endl;
+        }
+        file << endl;
+           
+        file.close();
+    }
+
 
     void insertGlider() {
         grid.insert(0,1, aliveValue);
@@ -177,7 +197,6 @@ class Grid {
         while(getline(file, line)) {
             if(centered == false){
                 centering += line.size();
-                cout <<centering<<endl;
                 centered = true;
             }
             for (uint j=0; j<line.length(); j++) {
