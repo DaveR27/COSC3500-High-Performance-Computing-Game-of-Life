@@ -1,4 +1,4 @@
-Optimisation Level: all
+Optimisation Level: None
 Generations: 100
 Grid Size: 256
 13enginecordership 0.7740190029144287 0.7469301223754883 0.7415056228637695 0.745488166809082 0.7539255619049072
