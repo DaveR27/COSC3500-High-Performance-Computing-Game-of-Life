@@ -1,0 +1,30 @@
+To run the program with visualization you need
+matplotlib.pyplot
+matplotlib.animation
+numpy
+
+Note:
+This program has only been tested for square grids,
+so when running it is only recommended that only
+squares are used
+
+All the code for the assignment is in the Serial directory
+
+To build:
+1. cd Serial
+2. make all 
+
+To Run program:
+No visualization:
+python3 display.py NoVis [Pattern Path] [Height] [Width] [Amount of Generation]
+    Note:
+        The project does come with some pattern files for running, there are located in Serial/PatternFiles
+
+With visualization:
+python3 display.py Vis [Pattern Path] [Height] [Width] [Amount of Generation]
+    Note:
+        With every run of the visualization, make sure there is no "game_of_life_save.txt" in current directory
+
+To run/check experiments check the GatherData.py file:
+    Note: 
+        Running this script will take hours, but reading the contents does show how the experiment data was gathered

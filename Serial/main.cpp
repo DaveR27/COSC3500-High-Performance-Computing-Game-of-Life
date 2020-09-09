@@ -2,7 +2,6 @@
 #include "gameOfLife.cpp"
 #include <fstream>
 #include <string>
-#include <time.h>
 using namespace std;
 
 /*
