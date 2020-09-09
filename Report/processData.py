@@ -2,6 +2,10 @@ import numpy as np
 import matplotlib as plt
 import json
 
+"""
+Takes the data.txt file and formats it into json for ease of use
+"""
+
 data_struct = {}
 
 currentOpti = ""

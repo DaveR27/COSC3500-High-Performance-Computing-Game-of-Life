@@ -5,7 +5,15 @@
 #include <time.h>
 using namespace std;
 
+/*
+Loop used to create a file of the generations used to visualise the running of a GoL pattern.
 
+@param int loop: The starting generation.
+@param int generations: The amount of generations the simulation will run for.
+@param int width: The width of the grid that the world will reside in.
+@param int height: The height of the grid that the world will reside in.
+@param Grid grid: The grid that the simulation occurs on.
+*/
 void VisLoop(int loop, int generations, 
             int width, int height, Grid grid){
     ofstream file;
@@ -30,11 +38,8 @@ void VisLoop(int loop, int generations,
 
 }
 
-
+//Runs Program
 int main(int argc, char const *argv[]) {
-    // clock_t t1, t2;
-    // t1 = clock(); //starts timer for experiments
-
     int generations;
     int width;
     int height;
@@ -57,32 +62,16 @@ int main(int argc, char const *argv[]) {
 
     //Grid that life is simulated on
     Grid grid(width, height);
-    switch (argc) {
-        case 6:
-            grid.insertPatternFromFile(argv[1]);
-            break;
+    grid.insertPatternFromFile(argv[1]);
         
-        default:
-            grid.insertGlider();
-            break;
-    }
     
     const string visStatus = "NoVis";
-    //bool vis = false;
     if (visStatus.compare(visOut)) {
-        VisLoop(loop, generations, width, height, grid);
-        //vis = true;
+        VisLoop(loop, generations, width, height, grid); //For visualizing
     } else {
-        grid.playGOL(loop, generations);
+        grid.playGOL(loop, generations); //For just running simulation
     }
 
-    //End of experiments
-    // t2 = clock();
-    // float tickDiff ((float)t2-(float)t1);
-    // float sec = tickDiff/CLOCKS_PER_SEC;
-    // cout<<sec<<endl;
-    // if (vis == false) {
-    //     grid.outputGrid();
-    // }
+   
     return 0;
 }

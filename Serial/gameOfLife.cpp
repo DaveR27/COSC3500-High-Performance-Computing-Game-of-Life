@@ -19,10 +19,19 @@ class Grid {
             grid = Vect2D(x, y);
         }
 
+    /*
+    Returns the current state of the grid
+    */
     Vect2D getGrid() {
         return grid;
     }
 
+    /*
+    Checks to see if what cells are alive directly around a given index.
+
+    @param int i: first index.
+    @param int j: second index.
+    */
     int aliveNeighbors(int i, int j) {
         int topL = 0; // neighbors[0]
         int topM = 0; // neighbors[1]
@@ -37,7 +46,7 @@ class Grid {
         int neighborsSize = 8;
         int aliveCells = 0;
 
-        //Handling Boundries
+        //Handling Boundaries
         if ((i == 0) ||  (j == 0) || (i == height) || (j == width)) {
 
 
@@ -94,7 +103,7 @@ class Grid {
             }
 
 
-        } else {
+        } else { //When not a boundary
             neighbors[0] = grid.index(i-1, j-1);
             neighbors[1] = grid.index(i-1, j);
             neighbors[2] = grid.index(i-1, j+1);
@@ -105,13 +114,13 @@ class Grid {
             neighbors[7] = grid.index(i+1, j+1);
         }
 
-        
+        //Checks all the neighbors
         for (int x=0; x<neighborsSize; x++) {
             if (neighbors[x] == 1) {
                 aliveCells++;
             }
         }
-        return aliveCells;
+        return aliveCells; // amount of alive cells around it
     }
 
     void updateGrid(vector<pair<int,int>> vect, int deadOrAlive) {
@@ -126,6 +135,8 @@ class Grid {
     - Any live cell with two or three live neighbors lives on to the next gen
     - Any live cell with more than 3 live neighbors dies = overpopulation
     - Any dead cell with exactly 3 live neighbors becomes living = reproduction
+
+    After these rules have been checked, the grid is then updated.
     */
     void evolve() {
         vector<pair<int,int>> killPos;
@@ -148,13 +159,17 @@ class Grid {
             }
         }
 
-        
         updateGrid(killPos, deadValue);
         updateGrid(alivePos, aliveValue);
-
         
     }
 
+    /*
+    Automatically places out a simulation on the grid.
+
+    @param int loop: initial starting point.
+    @param int generations: how long the generations will last
+    */
     void playGOL(int loop, int generations){
         while (loop <= generations) {
             evolve();
@@ -162,6 +177,9 @@ class Grid {
         }
     }
 
+    /*
+    Writes the current state of the grid to a file.
+    */
     void outputGrid(){
         ofstream file;
         file.open("game_of_life_save.txt");
@@ -179,15 +197,11 @@ class Grid {
     }
 
 
-    void insertGlider() {
-        grid.insert(0,1, aliveValue);
-        grid.insert(1,2, aliveValue);
-        grid.insert(2,0, aliveValue);
-        grid.insert(2,1, aliveValue);
-        grid.insert(2,2, aliveValue);
-    }
+    /*
+    Takes a txt file and inserts the pattern into the middle fo the grid
 
-    //Takes a txt file and inserts the pattern into the middle fo the grid
+    @param string fileName: String that is the path to a .txt pattern file
+    */
     void insertPatternFromFile(string fileName) {
         ifstream file(fileName);
         string line;

@@ -3,6 +3,13 @@ import matplotlib.animation as animation
 import numpy as np
 import sys
 import os
+"""
+This file is used for the visualization of the data produced by ./main
+It can also be used to run the program without visualization just to make usage easier.
+NoVis = Just run program no visualization
+Vis = Get python to visualize the data that the program produced.
+"""
+
 
 #Start up C++ GoL
 #---------------------------------
@@ -40,13 +47,11 @@ if argc == 6:
     default = False
 
 
-if default:
-    os.system("./main") #need to fix
-else:
-    os.system(
-        "./main " + path + ' ' + gridWidth + ' ' 
-        + gridHeight + ' ' + gridEvolves + ' ' + argv[1]
-    )
+
+os.system(
+    "./main " + path + ' ' + gridWidth + ' ' 
+    + gridHeight + ' ' + gridEvolves + ' ' + argv[1]
+)
     
 if (Vis == False):
     exit()

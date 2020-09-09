@@ -1,6 +1,10 @@
 import os
 import time
-
+"""
+This Script is used to gather all the data from running all the combinations of inputs to ./main
+It will then write the output to a file called "data.txt" which can be processed and changed 
+into json format using processData.py in the reports file.
+"""
 testAmount = 0
 Generations = ["100","1000","10000"]
 GridSize = ["256", "512", "1024"]
