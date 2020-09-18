@@ -108,12 +108,10 @@ class Grid {
     void outputGrid(){
         ofstream file;
         file.open("game_of_life_save.txt");
-
         for (int i=0; i < width; i++) {
             for (int j=0; j < height; j++) {
                 file << grid.index(i, j);
-            }
-            
+            } 
             file << endl;
         }
         file << endl;

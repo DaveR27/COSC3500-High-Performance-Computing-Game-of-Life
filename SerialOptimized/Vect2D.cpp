@@ -38,7 +38,7 @@ class Vect2D {
         @param double Ele: 
         */
         void insert(int row, int col, double Ele) {
-            array[(((row * colSize) + col)) % size] = Ele;
+            array[(((row * colSize) + col) % size) % size] = Ele;
         }
 
         /*
