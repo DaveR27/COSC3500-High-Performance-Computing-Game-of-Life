@@ -3,6 +3,7 @@
 #include "Vect2D.cpp"
 #include <vector>
 #include <fstream>
+#include <omp.h>
 
 using namespace std;
 
@@ -68,31 +69,32 @@ class Grid {
     void evolve() {
         vector<pair<int,int>> killPos;
         vector<pair<int,int>> alivePos;
-
-        for (int a=0; a<width; a++){
-            for(int b=0; b<height; b++) {
+        int a, b;
+        #pragma omp parallel for private(b) collapse(2)
+        for (a=0; a<width; a++){
+            for(b=0; b<height; b++) {
                 
-                int aliveCells = aliveNeighbors(a, b);
+                // int aliveCells = aliveNeighbors(a, b);
                 
 
-                if (aliveCells < 2) {
-                    killPos.push_back(make_pair(a, b));
+                // if (aliveCells < 2) {
+                //     killPos.push_back(make_pair(a, b));
                     
-                }
-                if (aliveCells > 3) {
-                    killPos.push_back(make_pair(a, b));
+                // }
+                // if (aliveCells > 3) {
+                //     killPos.push_back(make_pair(a, b));
                     
-                }
-                if (aliveCells == 3) {
-                    alivePos.push_back(make_pair(a, b));
+                // }
+                // if (aliveCells == 3) {
+                //     alivePos.push_back(make_pair(a, b));
                     
-                }
+                // }
             }
         }
 
-        updateGrid(killPos, deadValue);
+        //updateGrid(killPos, deadValue);
         
-        updateGrid(alivePos, aliveValue);
+        //updateGrid(alivePos, aliveValue);
         
         
     }
