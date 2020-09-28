@@ -11,7 +11,6 @@ class Grid {
     public:
         int width, height;
         Vect2D grid;
-        Vect2D neighborhood;
         int deadValue = 0;
         int aliveValue = 1;
         Grid(int x, int y) {
@@ -51,12 +50,6 @@ class Grid {
         return aNeighbors;
     }
 
-    void updateGrid(vector<pair<int,int>> vect, int deadOrAlive) {
-        for (uint i = 0; i < vect.size(); i ++) {
-            grid.insert(vect[i].first, vect[i].second, deadOrAlive);
-        }
-    }
-
     /*
     Given the state of a cell the GoL rules apply:
     - Any live call with fewer than 2 neighbors dies = underpopulation
@@ -67,36 +60,24 @@ class Grid {
     After these rules have been checked, the grid is then updated.
     */
     void evolve() {
-        vector<pair<int,int>> killPos;
-        vector<pair<int,int>> alivePos;
+        Vect2D temp = grid;
         int a, b;
-        #pragma omp parallel for private(b) collapse(2)
+        
+        #pragma omp parallel for default(none) collapse(2) shared(temp)
         for (a=0; a<width; a++){
             for(b=0; b<height; b++) {
                 
-                // int aliveCells = aliveNeighbors(a, b);
+                int aliveCells = aliveNeighbors(a, b);
                 
-
-                // if (aliveCells < 2) {
-                //     killPos.push_back(make_pair(a, b));
+                if (aliveCells < 2 || aliveCells > 3) {
+                    temp.insert(a,b,deadValue);
                     
-                // }
-                // if (aliveCells > 3) {
-                //     killPos.push_back(make_pair(a, b));
-                    
-                // }
-                // if (aliveCells == 3) {
-                //     alivePos.push_back(make_pair(a, b));
-                    
-                // }
+                } else if (aliveCells == 3) {
+                    temp.insert(a,b,aliveValue);
+                } 
             }
         }
-
-        //updateGrid(killPos, deadValue);
-        
-        //updateGrid(alivePos, aliveValue);
-        
-        
+        grid = temp;  
     }
 
     /*

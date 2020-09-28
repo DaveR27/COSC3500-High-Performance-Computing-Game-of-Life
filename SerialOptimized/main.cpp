@@ -1,7 +1,9 @@
 
+
 #include "gameOfLife.cpp"
 #include <fstream>
 #include <string>
+#include <chrono> 
 using namespace std;
 
 /*
@@ -39,6 +41,7 @@ void VisLoop(int loop, int generations,
 
 //Runs Program
 int main(int argc, char const *argv[]) {
+    auto start = chrono::high_resolution_clock::now();
     int generations;
     int width;
     int height;
@@ -73,6 +76,9 @@ int main(int argc, char const *argv[]) {
         grid.playGOL(loop, generations); //For just running simulation
     }
 
+    auto stop = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::microseconds>(stop-start).count();
+    cout<<duration<<endl;
    
     return 0;
 }
