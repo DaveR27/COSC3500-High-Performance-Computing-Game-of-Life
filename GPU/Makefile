@@ -23,11 +23,11 @@ all: $(TARGETS)
 #Compiling files
 #GPU
 Vect2D.ogpu: Vect2D.cu
-	g++ $(CFLAGS) -c Vect2D.cu -o Vect2D.ogpu
+	nvcc -c Vect2D.cu -o Vect2D.ogpu
 gameOfLife.ogpu: gameOfLife.cu
-	nvcc $(CFLAGS) -c gameOfLife.cu -o gameOfLife.ogpu
+	nvcc -c gameOfLife.cu -o gameOfLife.ogpu
 mainGPU: main.cu Vect2D.ogpu gameOfLife.ogpu
-	nvcc $(CFLAGS) Vect2D.ogpu  gameOfLife.ogpu main.cu -o main
+	nvcc Vect2D.ogpu  gameOfLife.ogpu main.cu -o main
 
 #parallel
 Vect2D.op: Vect2D.cpp

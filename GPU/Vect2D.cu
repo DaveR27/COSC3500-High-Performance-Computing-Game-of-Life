@@ -20,13 +20,7 @@ class Vect2D {
             array = std::vector<int>(size, 0);
         }
 
-        int modFix(int x) {
-            if (x < 0) {
-                return rowSize + (x % rowSize);
-            } else {
-                return x % rowSize;
-            }
-        }
+        
         
         /*
         Indexes into the vector and returns what is in that current index.
