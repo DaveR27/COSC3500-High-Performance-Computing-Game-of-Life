@@ -8,7 +8,7 @@ TARGETS = Vect2D.o gameOfLife.o main
 
 .DEFAULT: all
 
-gpu: Vect2D.ogpu gameOfLife.ogpu mainGPU
+gpu: mainGPU
 
 para: Vect2D.op gameOfLife.op mainOP
 
@@ -22,12 +22,8 @@ all: $(TARGETS)
 
 #Compiling files
 #GPU
-Vect2D.ogpu: Vect2D.cu
-	nvcc -c Vect2D.cu -o Vect2D.ogpu
-gameOfLife.ogpu: gameOfLife.cu
-	nvcc -c gameOfLife.cu -o gameOfLife.ogpu
-mainGPU: main.cu Vect2D.ogpu gameOfLife.ogpu
-	nvcc Vect2D.ogpu  gameOfLife.ogpu main.cu -o main
+mainGPU: main.cu 
+	nvcc main.cu -o main
 
 #parallel
 Vect2D.op: Vect2D.cpp

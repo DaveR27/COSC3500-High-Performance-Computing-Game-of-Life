@@ -1,9 +1,0 @@
-nvcc -c gameOfLife.cu -o gameOfLife.ogpu
-gameOfLife.cu(9): warning: attribute does not apply to any entity
-
-gameOfLife.cu(9): warning: attribute does not apply to any entity
-
-nvcc Vect2D.ogpu  gameOfLife.ogpu main.cu -o main
-nvcc fatal   : Don't know what to do with 'gameOfLife.ogpu'
-make: *** [mainGPU] Error 1
-/var/spool/slurmd/job6704362/slurm_script: line 11: ./main: No such file or directory
