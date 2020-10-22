@@ -21,12 +21,12 @@ Patterns = [
 for a in ImplementationTypes:
     data_json[a] = {}
     if a == "SerialOptimized":
-        os.system("cd ../" + i)
+        os.system("cd ../" + a)
     if a == "Parallel":
-        os.system("cd ../" + i)
+        os.system("cd ../" + a)
         OptimiseLevel = ["para", "para1", "para2", "para3"]
     if a == "GPU":
-        os.system("cd ../" + i)
+        os.system("cd ../" + a)
         OptimiseLevel = ["gpu"]
     for i in OptimiseLevel:
         data_json[a][i] = {}
@@ -45,7 +45,7 @@ for a in ImplementationTypes:
                         end_time = time.time() - start_time
                         testAmount = testAmount + 1
                         data_json[a][i][j][k][title[:-4]][m] = str(end_time)
-    os.system("cd ../DataGathering" + i)
+    os.system("cd ../DataGathering" + a)
 
 
 with open("data.json", 'w') as dataFile:
